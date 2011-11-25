@@ -1,0 +1,400 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+::selection{
+  background: rgba(249,255,74,0.8);
+  color: #333;
+}
+
+:focus { outline: 0; }
+
+body,html {
+  height: 100%;
+}
+
+body {
+  font: 16px/1.1em "Segoe UI", Helvetica, sans-serif;
+  overflow: hidden;
+  background: url('bgnoise_lg.png');
+  background: radial-gradient(50% 50%, farthest-side, rgba(1,1,1,0.3), rgba(255,255,255,0) 50%),
+              url('bgnoise_lg.png');
+  text-shadow: 0 0 1px rgba(255,255,255,0.1),
+}
+
+h1 {
+  margin: 0;
+  font-size: 3em;
+  letter-spacing: -1px;
+  color: rgba(0,0,0,0.4);
+  text-shadow: 0px 0px 1px rgba(0,0,0,0.8);
+  background: rgba(255,255,255,0.5);
+  padding: 30px 20px;
+  width: 580px;
+  border-radius: 10px;
+}
+
+#container {
+  width: 620px;
+  margin: 0 auto 40px auto;
+}
+
+#wrapper {
+  padding: 12px;
+  width: 620px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Since we need a tag soup in order for this to work I added four divs inside of each other; the fourth has a padding on top */
+#fourth {
+  padding: 40px 0 0 0;
+}
+
+#navigation {
+  position: relative;
+}
+
+/* Previous and Next buttons styling starts here; sometimes it appears Firefox is applying transition animatiosn to every style and not just transform and border. It seems to be random and I can't seem to replicate it. */
+#navigation a {
+  position: absolute;
+  display: block;
+  text-decoration: none;
+  height: 50px;
+  width: 50px;
+  border-radius: 120px;
+  background-color: rgba(0,0,0,0.3);
+  background-image: radial-gradient(50% 10%, circle closest-side, rgba(100,100,100,0.3), rgba(150,150,150,0.2) 50px, rgba(230,230,230,0.3) 100px);
+  border: 25px solid rgba(255,255,255,0.3);
+  box-sizing: border-box;
+  transition-property: transform, border;  
+  transition-duration: 0.5s, 0.5s;
+  box-shadow: 0 0 3px rgba(0,0,0,0.7);
+}
+
+#navigation span {
+  display: none;
+}
+
+/* On hover a small subtle pulse will appear on each circle */
+#navigation a:hover {
+  border: 5px solid rgba(0,0,0,0.4);
+  transition-property: transform, border;  
+  transition-duration: 0.5s, 0.5s;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse{
+	0%   { box-shadow: 0;}
+	50%  { box-shadow: 0 0 10px rgba(0,0,0,0.3),
+              -1px -1px 10px rgba(0,0,0,0.3),
+              1px 1px 10px rgba(0,0,0,0.3);}
+	100%   { box-shadow: 0;}
+}
+
+/* This animation is here will be shown when we target a Div and the slider has a caption, basically it will fade-in the caption */
+@keyframes fade-in{
+	0%   { opacity: 0;}
+	100%   { opacity: 1;}
+}
+
+/* Since the first slide is "targeted" by default we only need to show the second anchor that links our #second div */
+#navigation a:nth-child(2) {
+  top: 175px;
+  right: -70px;
+}
+
+/* When not showing, we hide and rezize to 0, each anchor. Since this is the first state, the only one showing is the previous anchor, so we have the other 3 */
+#navigation a:nth-child(1),
+#navigation a:nth-child(3),
+#navigation a:nth-child(4) {
+  transform: scale(0);
+  visibility: hidden;
+}
+
+/* Hiding not-used navigation links when not targeted */
+#second:target #navigation a:nth-child(2),
+#second:target #navigation a:nth-child(4),
+#third:target #navigation a:nth-child(1),
+#third:target #navigation a:nth-child(3),
+#fourth:target #navigation a:nth-child(1),
+#fourth:target #navigation a:nth-child(2),
+#fourth:target #navigation a:nth-child(4) {
+  transform: scale(0);
+  visibility: hidden;
+}
+
+/* When needed, depending on the targeted div we have to show them by reverting the previous style */
+#second:target #navigation a:nth-child(1),
+#second:target #navigation a:nth-child(3),
+#third:target #navigation a:nth-child(2),
+#third:target #navigation a:nth-child(4),
+#fourth:target #navigation a:nth-child(3) {
+  transform: scale(1);
+  visibility: visible;
+}
+
+/* Depending on the anchor, and the state of the slide, we have to position the anchors as previous/next buttons */
+#second:target #navigation a:nth-child(1),
+#third:target #navigation a:nth-child(2),
+#fourth:target #navigation a:nth-child(3) {
+  transform: scale(1);
+  visibility: visible;
+  top: 175px;
+  left: -70px;
+}
+
+#second:target #navigation a:nth-child(3),
+#third:target #navigation a:nth-child(4) {
+  transform: scale(1);
+  top: 175px;
+  right: -70px;
+}
+
+/* Giving each anchor a sneak peek of each slide */
+#navigation a:nth-child(1) {
+  background: url('slides/1.jpg');
+  background-position: center center;
+}
+
+#navigation a:nth-child(2) {
+  background: url('slides/2.jpg');
+  background-position: center center;
+}
+
+#navigation a:nth-child(3) {
+  background: url('slides/3.jpg');
+  background-position: center center;
+}
+
+#navigation a:nth-child(4) {
+  background: url('slides/4.jpg');
+  background-position: center center;
+}
+
+/* Slider starts here */
+#slider-container {
+  margin: 20px auto;
+  list-style: none;
+  border: 10px solid rgba(255,255,255,1);
+  background: rgba(0,0,0,0.8);
+  width: 600px;
+  height: 200px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  position: relative;
+  transition: border 0.5s ease-in-out;
+}
+
+#slider-container:hover {
+  border: 10px solid rgba(0,0,0,1);
+  transition: border 0.5s ease-in-out;
+}
+
+/* This is pure eye-candy; "bent" shadowy effect */
+#slider-container:before, #slider-container:after {
+	position: absolute;
+	width: 40%;
+	height: 10px;
+	content: ' ';
+	left: 12px;
+	bottom: -4px;
+	background: transparent;
+	transform: skew(-3deg) rotate(-3deg);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+	z-index: -1;
+}
+
+#slider-container:after {
+  left: auto;
+	right: 12px;
+	transform: skew(3deg) rotate(3deg);
+}
+
+#slider {
+  list-style: none;
+  width: 600px;
+  height: 200px;
+}
+
+/* Depending on the targeted div we have to hide certain <li>s inside #slider */
+#second:target #slider li:nth-child(1),
+#second:target #slider li:nth-child(3),
+#second:target #slider li:nth-child(4),
+#third:target #slider li:nth-child(1),
+#third:target #slider li:nth-child(2),
+#third:target #slider li:nth-child(4),
+#fourth:target #slider li:nth-child(1),
+#fourth:target #slider li:nth-child(2),
+#fourth:target #slider li:nth-child(3) { 
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+#second:target #slider li:nth-child(2),
+#third:target #slider li:nth-child(3),
+#fourth:target #slider li:nth-child(4) {
+  opacity: 1;
+}
+
+/* When the fourth slider is called the caption will fade-in by using a keyframe animation */
+#fourth:target #slider p {
+  animation: fade-in 3s ease 1;
+}
+
+#slider li {
+  width: 600px;
+  height: 200px;
+  float: left;
+  position: absolute;
+  transition: all 0.5s;
+}
+
+/* Technically the slider should work with any kind of content; I have yet to test it */
+#slider li * {
+  display: block;
+  width: 600px;
+  height: 200px;
+}
+
+/* The first slide is targeted by default; so that's why that's the only one we are showing atm and everything else has opacity: 0 */
+#slider li:nth-child(1) {
+  background: url('slides/1.jpg');
+}
+
+#slider li:nth-child(2) {
+  background: url('slides/2.jpg');
+  opacity: 0;
+}
+
+#slider li:nth-child(3) {
+  background: url('slides/3.jpg');
+  opacity: 0;
+}
+
+#slider li:nth-child(4) {
+  background: url('slides/4.jpg');
+  opacity: 0;
+}
+
+/* Captions are paragraphs */
+#slider p {
+  width: 560px;
+  position: absolute;
+  bottom: 0;
+  background: rgba(255,255,255,0.4);
+  padding: 1em 20px;
+  height: auto;
+  font-size: 0.8em;
+  border-top: 1px solid rgba(0,0,0,0.2);
+  text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Styling bullets */
+#bullets {
+  margin: 20px auto 0 auto;
+  width: 80px;
+}
+
+#bullets:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+#bullets a {
+  display: block;
+  width: 12px;
+  height: 12px;
+  text-indent: -1000em;
+  background: rgba(0,0,0,0.5);
+  border-radius: 900px;
+  float: left;
+  margin: 0 10px 0 0;
+  box-shadow: 0;
+  transition: all 1s;
+}
+
+#bullets a:last-child {
+  margin: 0;
+}
+
+#bullets a:hover,
+#second:target #bullets a:hover,
+#third:target #bullets a:hover,
+#fourth:target #bullets a:hover,
+#second:target #bullets a:nth-child(1):hover,
+#third:target #bullets a:nth-child(1):hover,
+#fourth:target #bullets a:nth-child(1):hover {
+  background: rgba(0,0,0,0.8);
+  box-shadow: 0 0 4px rgba(255,255,255,1);
+  transition: all 1s;
+}
+
+/* Again depending on the targeted div, we need to give a certain style to the proper bullet. By default the first bullet is selected.
+
+Radial gradients do not work on IE/Opera so the actual state of the bullets won't show. And Firefox seems to have some issues with this gradient as well; it's supposed to be centered.
+*/
+#bullets a:nth-child(1),
+#second:target #bullets a:nth-child(2),
+#third:target #bullets a:nth-child(3),
+#fourth:target #bullets a:nth-child(4) {
+  background: radial-gradient(center, ellipse cover, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 50%);
+  box-shadow: 0 0 4px rgba(255,255,255,1);
+  transition: all 1s;
+}
+
+/* We override the styles of the first bullet when not targeted here */
+#second:target #bullets a:nth-child(1),
+#third:target #bullets a:nth-child(1),
+#fourth:target #bullets a:nth-child(1) {
+  background: rgba(0,0,0,0.5);
+  box-shadow: 0 0 4px rgba(255,255,255,0);
+  transition: all 1s;
+}
+
+/* Slider ends here */
+#container #disclaimer {
+  margin: 40px auto 0 auto;
+  color: #eee;
+  line-height: 1.6em;
+  font-size: 0.7em;
+  padding: 20px;
+  background: rgba(0,0,0,0.8);
+}
+
+#disclaimer p {
+  margin: 0 0 20px 0;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 210px;
+  background: rgba(0, 0, 0, 0.1);
+  color: #444;
+  padding: 20px 15px;
+  font-size: 0.8em;
+}
+
+footer ul,
+footer li {
+  list-style: none;
+  text-align: left;
+}
+
+#container p a,
+footer a {
+  text-decoration: none;
+  color: #0072BC;
+}
+
+#container p a:hover,
+footer a:hover {
+  border-bottom: 1px dotted #0072BC;
+}
